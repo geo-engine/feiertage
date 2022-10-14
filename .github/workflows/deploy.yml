@@ -23,7 +23,7 @@ jobs:
       - name: Create iCal file
         run: |
           cargo run --release > ./output/feiertage.ical
-          rm ./output/.gitingore
+          rm ./output/.gitignore
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
