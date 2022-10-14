@@ -166,11 +166,6 @@ mod tests {
 
     use time::Month;
 
-    // #[test]
-    // fn test_deserialize_feiertag() {
-    //     assert!(parse_csv(Path::new("feiertage-nrw.csv")));
-    // }
-
     #[test]
     fn test_merge() {
         let v1 = vec![
