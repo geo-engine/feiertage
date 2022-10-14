@@ -21,7 +21,7 @@ jobs:
         run: rustup show
 
       - name: Create iCal file
-        run: cargo run --release > output/feiertage.ical
+        run: cargo run --release > ./output/feiertage.ical
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
