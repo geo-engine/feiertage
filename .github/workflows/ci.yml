@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+  merge_group:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: init rust-toolchain
+        # somehow rustup show will take care to initialize the version based on the toolchain file
+        run: rustup show
+
+      - name: Create iCal file for comparison
+        run: |
+          cargo run --release > ./output/feiertage_cmp.ical
+
+      - name: Check that generated iCal file is up to date
+        run: >
+          diff
+          <(grep -vE "DTSTAMP|CREATED|LAST-MODIFIED" ./output/feiertage.ical)
+          <(grep -vE "DTSTAMP|CREATED|LAST-MODIFIED" ./output/feiertage_cmp.ical)
