@@ -30,11 +30,11 @@ jobs:
       - name: Download holidays as CSVs
         working-directory: ./output
         run: |
-          python3 -c "import pandas as pd; \
+          python3 -c "import os; import pandas as pd; \
             url=f'{os.environ["HE_URL"]}'; \
             df=pd.read_html(url)[0]; \
             df.to_csv(f'feiertage_he_{os.environ["YEAR_TO_ADD"]}.csv', index=False, header=False, columns=['Feiertag','Datum'], sep='\t')"
-          python3 -c "import pandas as pd; \
+          python3 -c "import os; import pandas as pd; \
             url=f'{os.environ["NRW_URL"]}'; \
             df=pd.read_html(url)[0]; \
             df.to_csv(f'feiertage_nrw_{os.environ["YEAR_TO_ADD"]}.csv', index=False, header=False, columns=['Feiertag','Datum'], sep='\t')"
