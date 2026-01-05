@@ -22,6 +22,11 @@ jobs:
           echo "HE_URL=https://www.arbeitstage.org/hessen/feiertage-${YEAR_TO_ADD}-hessen/" >> $GITHUB_ENV
           echo "NRW_URL=https://www.arbeitstage.org/nordrhein-westfalen/feiertage-${YEAR_TO_ADD}-nordrhein-westfalen/" >> $GITHUB_ENV
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
       - name: Download holidays as CSVs
         working-directory: ./output
         run: |
