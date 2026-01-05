@@ -27,5 +27,5 @@ jobs:
       - name: Check that generated iCal file is up to date
         run: >
           diff
-          <(grep -vE "DTSTAMP|LAST-MODIFIED" ./output/feiertage.ical)
-          <(grep -vE "DTSTAMP|LAST-MODIFIED" ./output/feiertage_cmp.ical)
+          <(grep -vE "DTSTAMP|CREATED|LAST-MODIFIED" ./output/feiertage.ical)
+          <(grep -vE "DTSTAMP|CREATED|LAST-MODIFIED" ./output/feiertage_cmp.ical)
