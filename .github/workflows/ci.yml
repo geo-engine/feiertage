@@ -20,7 +20,12 @@ jobs:
         # somehow rustup show will take care to initialize the version based on the toolchain file
         run: rustup show
 
-      - name: Check that generated iCal file is up to date
+      - name: Create iCal file for comparison
         run: |
           cargo run --release > ./output/feiertage_cmp.ical
-          diff ./output/feiertage.ical ./output/feiertage_cmp.ical
+
+      - name: Check that generated iCal file is up to date
+        run: >
+          diff
+            <(grep -vE "DTSTAMP|LAST-MODIFIED" ./output/feiertage.ical)
+            <(grep -vE "DTSTAMP|LAST-MODIFIED" ./output/feiertage_cmp.ical)
