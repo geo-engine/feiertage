@@ -1,4 +1,5 @@
-use serde::{de, Deserialize, Deserializer};
+use anyhow::Context;
+use serde::{Deserialize, Deserializer, de};
 use std::collections::BTreeSet;
 use std::ffi::OsStr;
 use std::fmt::Debug;
@@ -6,7 +7,7 @@ use std::fs::{self};
 use std::io::Write;
 use std::path::PathBuf;
 use std::{io::LineWriter, path::Path};
-use time::{macros::format_description, Date};
+use time::{Date, macros::format_description};
 use time::{Duration, OffsetDateTime};
 
 fn main() {
@@ -18,7 +19,11 @@ fn main() {
 
     let parsed_csvs = csv_paths
         .iter()
-        .map(|path| parse_csv(path, extract_file_name(path)).unwrap())
+        .map(|path| {
+            parse_csv(path, extract_file_name(path))
+                .context(format!("Failed to parse CSV `{}`", path.display()))
+                .unwrap()
+        })
         .collect::<Vec<_>>();
 
     let merged_days = merge(&parsed_csvs);
@@ -39,10 +44,7 @@ fn csv_paths(directory: &Path) -> Vec<PathBuf> {
         .into_iter()
         .filter_map(Result::ok)
         .map(|e| e.path())
-        .filter(|path| {
-            path.extension()
-                .map_or(false, |extension| extension == "csv")
-        })
+        .filter(|path| path.extension().is_some_and(|extension| extension == "csv"))
         .collect()
 }
 
@@ -141,12 +143,12 @@ fn merge(inputs: &[Vec<Feiertag>]) -> Vec<Feiertag> {
     {
         // advance all iterators with that date
         for it in &mut iterators {
-            if let Some(feiertag) = it.peek() {
-                if feiertag.date == next_feiertag.date {
-                    next_feiertag.lands.append(&mut feiertag.lands.clone());
+            if let Some(feiertag) = it.peek()
+                && feiertag.date == next_feiertag.date
+            {
+                next_feiertag.lands.append(&mut feiertag.lands.clone());
 
-                    it.next();
-                }
+                it.next();
             }
         }
 
