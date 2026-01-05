@@ -16,17 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: init rust-toolchain
-        # somehow rustup show will take care to initialize the version based on the toolchain file
-        run: rustup show
-
-      - name: Check that iCal file exists
-        run: |
-          cargo run --release > ./output/feiertage.ical
-          rm ./output/.gitignore
-
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
